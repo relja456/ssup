@@ -8,6 +8,7 @@ import logika.KlijentKontroler;
 import domen.OpstiDomenskiObjekat;
 import domen.Projekat;
 import domen.Zadatak;
+import domen.Zaposleni;
 import forme.PocetnaForma;
 import forme_zadatak.FormaKreiranjeZadatka;
 import forme_zadatak.FormaZadatak;
@@ -18,6 +19,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
+import komunikacija.util.Operacija;
 import modeli_tabela.ZadaciTableModel;
 
 /**
@@ -33,10 +35,16 @@ public class FormaProjekat extends javax.swing.JFrame {
     List<Zadatak> zadaci;
     ZadaciTableModel ztm;
     PocetnaForma parentForma;
+    Zaposleni zaposleni;
 
     public FormaProjekat(Projekat projekat, PocetnaForma parentForma) {
         this.projekat = projekat;
         this.parentForma = parentForma;
+        try {
+            this.zaposleni = KlijentKontroler.getInstance().getZaposleni();
+        } catch (IOException ex) {
+            Logger.getLogger(FormaProjekat.class.getName()).log(Level.SEVERE, null, ex);
+        }
         initComponents();
         popuniKomponente();
         setVisible(true);
@@ -296,5 +304,16 @@ public class FormaProjekat extends javax.swing.JFrame {
         }
         areaOpis.setLineWrap(true);
         areaOpis.setWrapStyleWord(true);
+        
+        podesiStanjaUOdnosuNaDozvole();
+    }
+    
+        private void podesiStanjaUOdnosuNaDozvole() {
+            if (!this.zaposleni.imaDozvolu(Operacija.ZAPAMTI_ZADATAK)) {
+                btnDodajZadatak.setEnabled(false);
+            }
+            if (!this.zaposleni.imaDozvolu(Operacija.OBRISI_ZADATAK)){
+                btnObrisiZadatak.setEnabled(false);
+            }
     }
 }

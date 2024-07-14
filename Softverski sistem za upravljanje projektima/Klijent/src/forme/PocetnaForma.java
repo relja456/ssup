@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import javax.swing.ListSelectionModel;
+import komunikacija.util.Operacija;
 
 /**
  *
@@ -35,11 +36,15 @@ public class PocetnaForma extends javax.swing.JFrame {
     List<Projekat> projekti;
     ProjektiTableModel ptm;
 
-    public PocetnaForma(Zaposleni zaposleni) {
+    public PocetnaForma() {
         initComponents();
         setVisible(true);
         setLocationRelativeTo(null);
-        this.zaposleni = zaposleni;
+        try {
+            this.zaposleni = KlijentKontroler.getInstance().getZaposleni();
+        } catch (IOException ex) {
+            Logger.getLogger(PocetnaForma.class.getName()).log(Level.SEVERE, null, ex);
+        }
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         popuniKomponente();
         podesiLogoutNaExit();
@@ -75,6 +80,8 @@ public class PocetnaForma extends javax.swing.JFrame {
         txtKorisnickoIme = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         txtJMBG = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        txtUloga = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         txtPretraga = new javax.swing.JTextField();
         btnPretrazi = new javax.swing.JButton();
@@ -220,24 +227,33 @@ public class PocetnaForma extends javax.swing.JFrame {
 
         txtJMBG.setEditable(false);
 
+        jLabel8.setText("Uloga: ");
+
+        txtUloga.setEditable(false);
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
-                .addComponent(jLabel1)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtImePrezime, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtKorisnickoIme, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel10)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtJMBG, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(9, Short.MAX_VALUE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(txtImePrezime, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtKorisnickoIme, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtJMBG, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtUloga, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -250,7 +266,11 @@ public class PocetnaForma extends javax.swing.JFrame {
                     .addComponent(txtKorisnickoIme, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel10)
                     .addComponent(txtJMBG, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(txtUloga, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(13, Short.MAX_VALUE))
         );
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Aktivni projekti"));
@@ -366,12 +386,12 @@ public class PocetnaForma extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -507,6 +527,7 @@ public class PocetnaForma extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -524,6 +545,7 @@ public class PocetnaForma extends javax.swing.JFrame {
     private javax.swing.JTextField txtKorisnickoIme;
     private javax.swing.JTextField txtPIB;
     private javax.swing.JTextField txtPretraga;
+    private javax.swing.JTextField txtUloga;
     // End of variables declaration//GEN-END:variables
 
     public void popuniKomponente() {
@@ -535,7 +557,10 @@ public class PocetnaForma extends javax.swing.JFrame {
         txtGrad.setText(zaposleni.getKompanija().getGrad());
         txtDatumOsnivanja.setText(zaposleni.getKompanija().getDatumOsnivanja().toString());
         txtPIB.setText(zaposleni.getKompanija().getPIB());
+        txtUloga.setText(zaposleni.getUloga().getNaziv());
 
+        podesiStanjaUOdnosuNaDozvole();
+        
         try {
             List<Zaposleni> zaposleni = KlijentKontroler.getInstance().vratiListuSvihZaposlenih(this.zaposleni);
             int brojZaposlenih = zaposleni.size();
@@ -553,6 +578,15 @@ public class PocetnaForma extends javax.swing.JFrame {
             txtPretraga.setText("");
         });
 
+    }
+    
+    private void podesiStanjaUOdnosuNaDozvole() {
+            if (!this.zaposleni.imaDozvolu(Operacija.ZAPAMTI_PROJEKAT)) {
+                btnKreirajNoviProjekat.setEnabled(false);
+            }
+            if (!this.zaposleni.imaDozvolu(Operacija.OBRISI_PROJEKAT)){
+                btnObrisiProjekat.setEnabled(false);
+            }
     }
 
     public void popuniTabelu() {

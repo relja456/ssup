@@ -4,8 +4,10 @@
  */
 package logika;
 
-import domen.OpstiDomenskiObjekat;
+import domen.Dozvola;
+import domen.DozvolaUloge;
 import domen.Projekat;
+import domen.Uloga;
 import domen.Zadatak;
 import domen.Zaduzenje;
 import domen.Zaposleni;
@@ -31,6 +33,8 @@ public class KlijentKontroler {
     Zahtev zahtev;
     Odgovor odgovor;
 
+    private Zaposleni zaposleni;
+
     static KlijentKontroler instance;
 
     public KlijentKontroler() throws IOException {
@@ -48,6 +52,14 @@ public class KlijentKontroler {
 
     public Socket getSocket() {
         return socket;
+    }
+
+    public Zaposleni getZaposleni() {
+        return zaposleni;
+    }
+
+    public void setZaposleni(Zaposleni zaposleni) {
+        this.zaposleni = zaposleni;
     }
 
     //-----------------LOGOUT---------------------
@@ -227,4 +239,23 @@ public class KlijentKontroler {
     }
     //--------------------------------------------------------------
 
+    public Uloga ucitajUlogu(Uloga uloga) throws Exception {
+        zahtev = new Zahtev(Operacija.UCITAJ_ULOGU, uloga);
+        sender.send(zahtev);
+        odgovor = (Odgovor) receiver.receive();
+        if (odgovor.getException() != null) {
+            throw odgovor.getException();
+        }
+        return (Uloga) odgovor.getData();
+    }
+
+    public List<Dozvola> ucitajDozvoleZaUlogu(DozvolaUloge dozvolaUloge) throws Exception {
+        zahtev = new Zahtev(Operacija.UCITAJ_DOZVOLE, dozvolaUloge);
+        sender.send(zahtev);
+        odgovor = (Odgovor) receiver.receive();
+        if (odgovor.getException() != null) {
+            throw odgovor.getException();
+        }
+        return (List<Dozvola>) odgovor.getData();
+    }
 }

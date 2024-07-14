@@ -8,6 +8,7 @@ import domen.OpstiDomenskiObjekat;
 import logika.KlijentKontroler;
 import domen.Zadatak;
 import domen.Zaduzenje;
+import domen.Zaposleni;
 import forme.PocetnaForma;
 import forme_projekat.FormaProjekat;
 import forme_zaduzenje.FormaZaduzenje;
@@ -18,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
+import komunikacija.util.Operacija;
 import modeli_tabela.ProjektiTableModel;
 import modeli_tabela.ZaduzenjaTableModel;
 
@@ -35,10 +37,16 @@ public class FormaZadatak extends javax.swing.JFrame {
     boolean dopustenaIzmena = false;
     ZaduzenjaTableModel ztm;
     FormaProjekat parentForma;
+    Zaposleni zaposleni;
 
     public FormaZadatak(Zadatak zadatak, FormaProjekat parentForma) {
         this.zadatak = zadatak;
         this.parentForma = parentForma;
+        try {
+            this.zaposleni = KlijentKontroler.getInstance().getZaposleni();
+        } catch (IOException ex) {
+            Logger.getLogger(FormaZadatak.class.getName()).log(Level.SEVERE, null, ex);
+        }
         initComponents();
         setVisible(true);
         setLocationRelativeTo(null);
@@ -320,7 +328,9 @@ public class FormaZadatak extends javax.swing.JFrame {
         areaOpis.setText(zadatak.getOpis());
         areaOpis.setLineWrap(true);
         areaOpis.setWrapStyleWord(true);
+        
         popuniTabelu();
+        podesiStanjaUOdnosuNaDozvole();
     }
 
     private void postaviStanjaDugmica() {
@@ -353,6 +363,18 @@ public class FormaZadatak extends javax.swing.JFrame {
             }
         } catch (Exception ex) {
             Logger.getLogger(PocetnaForma.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void podesiStanjaUOdnosuNaDozvole() {
+        if (!this.zaposleni.imaDozvolu(Operacija.ZAPAMTI_ZADUZENJE)) {
+            btnDodajZaduzenje.setEnabled(false);
+        }
+        if (!this.zaposleni.imaDozvolu(Operacija.OBRISI_ZADUZENJE)) {
+            btnObrisiZaduzenje.setEnabled(false);
+        }
+        if (!this.zaposleni.imaDozvolu(Operacija.IZMENI_ZADATAK)) {
+            btnIzmeniZadatak.setEnabled(false);
         }
     }
 }

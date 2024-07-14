@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import komunikacija.util.OperacijaNadZaduzenjem;
 import java.sql.SQLIntegrityConstraintViolationException;
+import komunikacija.util.Operacija;
 
 /**
  *
@@ -35,9 +36,15 @@ public class FormaZaduzenje extends javax.swing.JFrame {
     List<Zaposleni> listaZaposlenih;
     FormaZadatak parentForma;
     OperacijaNadZaduzenjem op;
+    Zaposleni zaposleni;
 
     public FormaZaduzenje(FormaZadatak parentForma) {
         this.parentForma = parentForma;
+        try {
+            this.zaposleni = KlijentKontroler.getInstance().getZaposleni();
+        } catch (IOException ex) {
+            Logger.getLogger(FormaZaduzenje.class.getName()).log(Level.SEVERE, null, ex);
+        }
         initComponents();
         setVisible(true);
         setLocationRelativeTo(null);
@@ -245,6 +252,8 @@ public class FormaZaduzenje extends javax.swing.JFrame {
             popuniComboBox();
             btnZapamtiZaduzenje.setText("Zapamti zaduzenje");
         }
+
+        podesiStanjaUOdnosuNaDozvole();
     }
 
     private void popuniComboBox() {
@@ -281,6 +290,17 @@ public class FormaZaduzenje extends javax.swing.JFrame {
             comboZaposleni.setSelectedIndex(indeksZaSelektovati);
         } catch (Exception ex) {
             Logger.getLogger(FormaZaduzenje.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void podesiStanjaUOdnosuNaDozvole() {
+        if (!this.zaposleni.imaDozvolu(Operacija.IZMENI_ZADUZENJE)) {
+            btnZapamtiZaduzenje.setEnabled(false);
+            txtNazivZaduzenja.setEditable(false);
+            JXDatePicker.setEnabled(false);
+            comboZaposleni.setEnabled(false);
+            areaOpisPosla.setEnabled(false);
+            setTitle("Prikaz zaduzenja");
         }
     }
 }

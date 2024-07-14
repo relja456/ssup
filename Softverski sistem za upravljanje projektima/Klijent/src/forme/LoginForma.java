@@ -4,12 +4,17 @@
  */
 package forme;
 
+import domen.Dozvola;
+import domen.DozvolaUloge;
+import domen.Uloga;
 import logika.KlijentKontroler;
 import domen.Zaposleni;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -114,11 +119,13 @@ public class LoginForma extends javax.swing.JFrame {
         try {
             Zaposleni zaposleni = new Zaposleni(txtKorisnickoIme.getText(), String.valueOf(pswLozinka.getPassword()));
             zaposleni = KlijentKontroler.getInstance().login(zaposleni);
-
+            
             this.dispose();
-            new PocetnaForma(zaposleni);
+            
+            KlijentKontroler.getInstance().setZaposleni(zaposleni);
+            new PocetnaForma();
+            
             JOptionPane.showMessageDialog(null, "Na sistem se prijavio korisnik: " + zaposleni, "Uspeno prijavljivanje!", JOptionPane.INFORMATION_MESSAGE);
-
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage(), "Greska", JOptionPane.ERROR_MESSAGE);
             Logger.getLogger(LoginForma.class.getName()).log(Level.SEVERE, null, ex);
