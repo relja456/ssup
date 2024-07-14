@@ -1,0 +1,14 @@
+Korisnici mogu kreirati nove projekte i uneti osnovne informacije, kao što su naziv, opis i datum početka projekta. Aplikacija omogućava korisnicima da definišu zadatke unutar svakog projekta. 
+
+Zaposleni mogu kreirati zaduženja, brisati ih i izmenjivati. Takođe mogu videti i njihove opise i rokove za završetak rada na zadacima. 
+
+-Larmanova metoda razvoja softvera
+-Komunikacija klijenta i servera preko socketa
+-Niti
+-Komunikacija sa bazom
+-Login
+-Logout
+-Sistemske operacije
+-Kontroleri
+-Singleton-i
+-Java swing front end
