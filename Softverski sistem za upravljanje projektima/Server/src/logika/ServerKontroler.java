@@ -5,19 +5,25 @@
 package logika;
 
 import baza.DatabaseBroker;
+import domen.Dozvola;
+import domen.DozvolaUloge;
 import domen.Projekat;
+import domen.Uloga;
 import domen.Zadatak;
 import domen.Zaduzenje;
 import domen.Zaposleni;
 import forme.ServerForma;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import niti.KlijentskaNit;
+import so.dozvola.soUcitajDozvole;
 import so.projekat.soNadjiProjekte;
 import so.projekat.soObrisiProjekat;
 import so.projekat.soUcitajListuSvihProjekata;
 import so.projekat.soUcitajProjekat;
 import so.projekat.soZapamtiProjekat;
+import so.uloga.soUcitajUlogu;
 import so.zadatak.soIzmeniZadatak;
 import so.zadatak.soObrisiZadatak;
 import so.zadatak.soUcitajListuSvihZadataka;
@@ -58,8 +64,6 @@ public class ServerKontroler {
 
     public boolean vecUlogovan(Zaposleni zaposleni, KlijentskaNit kn) {
         if (ulogovani == null || ulogovani.isEmpty()) {
-            ulogovani.add(zaposleni);
-            povezaneNiti.add(kn);
             return false;
         }
         for (Zaposleni z : ulogovani) {
@@ -67,9 +71,12 @@ public class ServerKontroler {
                 return true;
             }
         }
-        ulogovani.add(zaposleni);
-        povezaneNiti.add(kn);
         return false;
+    }
+    
+    public void dodajNitDodajZaposlenog(KlijentskaNit kn, Zaposleni zaposleni) {
+        povezaneNiti.add(kn);
+        ulogovani.add(zaposleni);
     }
 
     public void logout(KlijentskaNit kn, Zaposleni zaposleni) {
@@ -183,6 +190,18 @@ public class ServerKontroler {
         return povezaneNiti;
     }
 
+    public Object ucitajUlogu(Uloga uloga) throws Exception {
+        soUcitajUlogu so = new soUcitajUlogu();
+        so.templateExecute(uloga);
+        return so.getResult();
+    }
+
+    public Object ucitajDozvole(DozvolaUloge dozvolaUloge) throws Exception {
+        soUcitajDozvole so = new soUcitajDozvole();
+        so.templateExecute(dozvolaUloge);
+        return so.getResult();
+    }
+
     public List<Zaposleni> getUlogovani() {
         return ulogovani;
     }
@@ -202,5 +221,7 @@ public class ServerKontroler {
             }
         }
     }
+
+
 
 }

@@ -4,7 +4,10 @@
  */
 package niti;
 
+import domen.Dozvola;
+import domen.DozvolaUloge;
 import domen.Projekat;
+import domen.Uloga;
 import domen.Zadatak;
 import domen.Zaduzenje;
 import domen.Zaposleni;
@@ -69,10 +72,24 @@ public class KlijentskaNit extends Thread {
                                 if (zaposleni == null) {
                                     throw new Exception("Ne postoji korisnik sa ovim kredencijalima!");
                                 }
+                                
+                                //uspesno logovanje
                                 if (!ServerKontroler.getInstance().vecUlogovan(zaposleni, this)) {
+
+                                    Uloga uloga = (Uloga) ServerKontroler.getInstance().ucitajUlogu(zaposleni.getUloga());
+
+                                    DozvolaUloge dozvolaUloge = new DozvolaUloge(null, uloga);
+                                    List<Dozvola> dozvole = (List<Dozvola>) ServerKontroler.getInstance().ucitajDozvole(dozvolaUloge);
+                                    
+                                    zaposleni.setUloga(uloga);
+                                    zaposleni.getUloga().setDozvole(dozvole);
+
                                     odgovor.setData(zaposleni);
                                     this.zaposleni = zaposleni;
+                                    
+                                    ServerKontroler.getInstance().dodajNitDodajZaposlenog(this, zaposleni);
                                     ServerKontroler.getInstance().getServerForma().popuniTabelu();
+                                    
                                 } else {
                                     throw new Exception("Vec je ulogovan ovaj korisnik");
                                 }
@@ -86,9 +103,13 @@ public class KlijentskaNit extends Thread {
                             }
                             case Operacija.UCITAJ_PROJEKAT -> {
 
-                                Projekat projekat = (Projekat) zahtev.getArgument();
-                                projekat = (Projekat) ServerKontroler.getInstance().ucitajProjekat(projekat);
-                                odgovor.setData(projekat);
+                                if (this.zaposleni.imaDozvolu(zahtev.getOperacija())) {
+                                    Projekat projekat = (Projekat) zahtev.getArgument();
+                                    projekat = (Projekat) ServerKontroler.getInstance().ucitajProjekat(projekat);
+                                    odgovor.setData(projekat);
+                                } else {
+                                    throw new Exception("Nemate dozvolu za ovom operacijom!");
+                                }
 
                             }
                             case Operacija.UCITAJ_LISTU_SVIH_PROJEKATA -> {
@@ -107,27 +128,43 @@ public class KlijentskaNit extends Thread {
                             }
                             case Operacija.OBRISI_PROJEKAT -> {
 
-                                Projekat projekat = (Projekat) zahtev.getArgument();
-                                ServerKontroler.getInstance().obrisiProjekat(projekat);
+                                if (this.zaposleni.imaDozvolu(zahtev.getOperacija())) {
+                                    Projekat projekat = (Projekat) zahtev.getArgument();
+                                    ServerKontroler.getInstance().obrisiProjekat(projekat);
+                                } else {
+                                    throw new Exception("Nemate dozvolu za ovom operacijom!");
+                                }
 
                             }
                             case Operacija.ZAPAMTI_PROJEKAT -> {
 
-                                Projekat projekat = (Projekat) zahtev.getArgument();
-                                ServerKontroler.getInstance().zapamtiProjekat(projekat);
+                                if (this.zaposleni.imaDozvolu(zahtev.getOperacija())) {
+                                    Projekat projekat = (Projekat) zahtev.getArgument();
+                                    ServerKontroler.getInstance().zapamtiProjekat(projekat);
+                                } else {
+                                    throw new Exception("Nemate dozvolu za ovom operacijom!");
+                                }
 
                             }
                             case Operacija.UCITAJ_ZADATAK -> {
 
-                                Zadatak zadatak = (Zadatak) zahtev.getArgument();
-                                zadatak = (Zadatak) ServerKontroler.getInstance().ucitajZadatak(zadatak);
-                                odgovor.setData(zadatak);
+                                if (this.zaposleni.imaDozvolu(zahtev.getOperacija())) {
+                                    Zadatak zadatak = (Zadatak) zahtev.getArgument();
+                                    zadatak = (Zadatak) ServerKontroler.getInstance().ucitajZadatak(zadatak);
+                                    odgovor.setData(zadatak);
+                                } else {
+                                    throw new Exception("Nemate dozvolu za ovom operacijom!");
+                                }
 
                             }
                             case Operacija.IZMENI_ZADATAK -> {
 
-                                Zadatak zadatak = (Zadatak) zahtev.getArgument();
-                                ServerKontroler.getInstance().izmeniZadatak(zadatak);
+                                if (this.zaposleni.imaDozvolu(zahtev.getOperacija())) {
+                                    Zadatak zadatak = (Zadatak) zahtev.getArgument();
+                                    ServerKontroler.getInstance().izmeniZadatak(zadatak);
+                                } else {
+                                    throw new Exception("Nemate dozvolu za ovom operacijom!");
+                                }
 
                             }
                             case Operacija.UCITAJ_LISTU_SVIH_ZADATAKA -> {
@@ -139,21 +176,33 @@ public class KlijentskaNit extends Thread {
                             }
                             case Operacija.OBRISI_ZADATAK -> {
 
-                                Zadatak zadatak = (Zadatak) zahtev.getArgument();
-                                ServerKontroler.getInstance().obrisiZadatak(zadatak);
+                                if (this.zaposleni.imaDozvolu(zahtev.getOperacija())) {
+                                    Zadatak zadatak = (Zadatak) zahtev.getArgument();
+                                    ServerKontroler.getInstance().obrisiZadatak(zadatak);
+                                } else {
+                                    throw new Exception("Nemate dozvolu za ovom operacijom!");
+                                }
 
                             }
                             case Operacija.ZAPAMTI_ZADATAK -> {
 
-                                Zadatak zadatak = (Zadatak) zahtev.getArgument();
-                                ServerKontroler.getInstance().zapamtiZadatak(zadatak);
+                                if (this.zaposleni.imaDozvolu(zahtev.getOperacija())) {
+                                    Zadatak zadatak = (Zadatak) zahtev.getArgument();
+                                    ServerKontroler.getInstance().zapamtiZadatak(zadatak);
+                                } else {
+                                    throw new Exception("Nemate dozvolu za ovom operacijom!");
+                                }
 
                             }
                             case Operacija.UCITAJ_ZADUZENJE -> {
 
-                                Zaduzenje zaduzenje = (Zaduzenje) zahtev.getArgument();
-                                zaduzenje = (Zaduzenje) ServerKontroler.getInstance().ucitajZaduzenje(zaduzenje);
-                                odgovor.setData(zaduzenje);
+                                if (this.zaposleni.imaDozvolu(zahtev.getOperacija())) {
+                                    Zaduzenje zaduzenje = (Zaduzenje) zahtev.getArgument();
+                                    zaduzenje = (Zaduzenje) ServerKontroler.getInstance().ucitajZaduzenje(zaduzenje);
+                                    odgovor.setData(zaduzenje);
+                                } else {
+                                    throw new Exception("Nemate dozvolu za ovom operacijom!");
+                                }
 
                             }
                             case Operacija.UCITAJ_LISTU_SVIH_ZADUZENJA -> {
@@ -165,26 +214,37 @@ public class KlijentskaNit extends Thread {
                             }
                             case Operacija.IZMENI_ZADUZENJE -> {
 
-                                Zaduzenje zaduzenje = (Zaduzenje) zahtev.getArgument();
-                                ServerKontroler.getInstance().izmeniZaduzenje(zaduzenje);
+                                if (this.zaposleni.imaDozvolu(zahtev.getOperacija())) {
+                                    Zaduzenje zaduzenje = (Zaduzenje) zahtev.getArgument();
+                                    ServerKontroler.getInstance().izmeniZaduzenje(zaduzenje);
+                                } else {
+                                    throw new Exception("Nemate dozvolu za ovom operacijom!");
+                                }
 
                             }
                             case Operacija.ZAPAMTI_ZADUZENJE -> {
 
-                                Zaduzenje zaduzenje = (Zaduzenje) zahtev.getArgument();
-                                ServerKontroler.getInstance().zapamtiZaduzenje(zaduzenje);
+                                if (this.zaposleni.imaDozvolu(zahtev.getOperacija())) {
+                                    Zaduzenje zaduzenje = (Zaduzenje) zahtev.getArgument();
+                                    ServerKontroler.getInstance().zapamtiZaduzenje(zaduzenje);
+                                } else {
+                                    throw new Exception("Nemate dozvolu za ovom operacijom!");
+                                }
 
                             }
                             case Operacija.OBRISI_ZADUZENJE -> {
 
-                                Zaduzenje zaduzenje = (Zaduzenje) zahtev.getArgument();
-                                ServerKontroler.getInstance().obrisiZaduzenje(zaduzenje);
+                                if (this.zaposleni.imaDozvolu(zahtev.getOperacija())) {
+                                    Zaduzenje zaduzenje = (Zaduzenje) zahtev.getArgument();
+                                    ServerKontroler.getInstance().obrisiZaduzenje(zaduzenje);
+                                } else {
+                                    throw new Exception("Nemate dozvolu za ovom operacijom!");
+                                }
 
                             }
                         }
                     } catch (Exception e) {
                         odgovor.setException(e);
-
                     }
 
                     sender.send(odgovor);
