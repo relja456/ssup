@@ -7,6 +7,7 @@ package domen;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -20,6 +21,7 @@ public class Zaposleni extends OpstiDomenskiObjekat implements Serializable {
     private String korisnickoIme;
     private String lozinka;
     private Kompanija kompanija;
+    private Uloga uloga;
 
     public Zaposleni() {
     }
@@ -31,6 +33,15 @@ public class Zaposleni extends OpstiDomenskiObjekat implements Serializable {
     public Zaposleni(String korisnickoIme, String lozinka) {
         this.korisnickoIme = korisnickoIme;
         this.lozinka = lozinka;
+    }
+
+    public Zaposleni(String JMBG, String imePrezime, String korisnickoIme, String lozinka, Kompanija kompanija, Uloga uloga) {
+        this.JMBG = JMBG;
+        this.imePrezime = imePrezime;
+        this.korisnickoIme = korisnickoIme;
+        this.lozinka = lozinka;
+        this.kompanija = kompanija;
+        this.uloga = uloga;
     }
 
     public Zaposleni(String JMBG, String imePrezime, String korisnickoIme, String lozinka, Kompanija kompanija) {
@@ -81,6 +92,14 @@ public class Zaposleni extends OpstiDomenskiObjekat implements Serializable {
         this.lozinka = lozinka;
     }
 
+    public Uloga getUloga() {
+        return uloga;
+    }
+
+    public void setUloga(Uloga uloga) {
+        this.uloga = uloga;
+    }
+
     @Override
     public String toString() {
         return imePrezime + " : " + kompanija;
@@ -107,6 +126,17 @@ public class Zaposleni extends OpstiDomenskiObjekat implements Serializable {
         return Objects.equals(this.JMBG, other.JMBG);
     }
 
+    public boolean imaDozvolu(int operacija) {
+        List<Dozvola> dozvole = getUloga().getDozvole();
+
+        for (Dozvola d : dozvole) {
+            if (operacija == d.getId()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public String tabela() {
         return "zaposleni";
@@ -130,18 +160,20 @@ public class Zaposleni extends OpstiDomenskiObjekat implements Serializable {
     @Override
     public OpstiDomenskiObjekat postaviVrednostiAtributa(ResultSet rs) throws SQLException {
         Zaposleni z = new Zaposleni();
-        
+
         z.setJMBG(rs.getString("JMBG"));
         z.setImePrezime(rs.getString("imePrezime"));
         z.setKorisnickoIme(rs.getString("korisnickoIme"));
         z.setLozinka(rs.getString("lozinka"));
-        
-        z.setKompanija(new Kompanija(rs.getString("PIB"), 
-                rs.getString("nazivKompanije"), 
-                rs.getString("drzava"), 
-                rs.getString("grad"), 
+
+        z.setKompanija(new Kompanija(rs.getString("PIB"),
+                rs.getString("nazivKompanije"),
+                rs.getString("drzava"),
+                rs.getString("grad"),
                 rs.getDate("datumOsnivanja").toLocalDate()));
-        
+
+        z.setUloga(new Uloga(rs.getInt("uloga")));
+
         return z;
     }
 
