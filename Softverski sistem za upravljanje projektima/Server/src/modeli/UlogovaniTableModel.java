@@ -21,7 +21,7 @@ public class UlogovaniTableModel extends AbstractTableModel {
         this.zaposleni = zaposleni;
     }
 
-    String[] kolone = {"Korisnicko ime", "Ime i prezime", "Kompanija"};
+    String[] kolone = {"Korisnicko ime", "Ime i prezime", "Kompanija", "Uloga"};
 
     @Override
     public String getColumnName(int column) {
@@ -35,7 +35,7 @@ public class UlogovaniTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 3;
+        return 4;
     }
 
     @Override
@@ -47,6 +47,8 @@ public class UlogovaniTableModel extends AbstractTableModel {
                 return zaposleni.get(rowIndex).getImePrezime();
             case 2:
                 return zaposleni.get(rowIndex).getKompanija().getNazivKompanije();
+            case 3:
+                return zaposleni.get(rowIndex).getUloga().getNaziv();
             default:
                 throw new AssertionError();
         }
